@@ -145,18 +145,19 @@ def extract_text():
                         "role": "system",
                         "content": """You are a specialized assistant that extracts driver's license information from text.
                         Analyze the following text and extract structured information for these fields if present:
-                        - LIC#
-                        - Name
-                        - DOB
+                        - LIC# (License Number)
+                        - Name (Full name as it appears)
+                        - DOB (Date of Birth)
                         - Issue Date
                         - Expiration Date
-                        - Address
+                        - Address (Full address including city, state, zip)
                         - Sex
                         - Height
                         - Weight
-                        - Eyes
+                        - Eyes (Eye color)
                         - Restriction
-                        - DD#
+                        - Class (License class)
+                        - DD# (Document Discriminator Number)
                         - Donor status
                         - Revision date
                         
