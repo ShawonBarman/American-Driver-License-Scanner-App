@@ -8,7 +8,6 @@ It processes text and returns structured details such as **Name, DOB, License Nu
 - Extracts all visible text from driver's license images.  
 - Automatically recognizes structured details (Name, DOB, LIC#, etc.).  
 - Uses OpenAI's **GPT-4o** for accurate OCR and text processing.  
-- Simple API for integration into other applications.  
-- Free deployment on **Render** or **Railway**.  
+- Simple API for integration into other applications. 
 
 ---
