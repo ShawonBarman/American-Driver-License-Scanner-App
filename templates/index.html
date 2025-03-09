@@ -50,19 +50,71 @@
             font-family: 'Inter', sans-serif;
             height: 100%;
             overscroll-behavior: none;
+            margin: 0;
+            padding: 0;
         }
         
         .app-container {
             min-height: 100%;
             display: flex;
             flex-direction: column;
+            max-width: 100%;
+            overflow-x: hidden;
         }
         
+        /* Responsive camera container */
+        .camera-container {
+            height: 65vh; /* Reduced height */
+            width: 100%; /* Full width on mobile */
+            max-width: 100%;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        /* Make preview card match camera dimensions */
+        .preview-card {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            width: 100%; /* Full width */
+            max-width: 450px; /* Maximum width */
+            height: auto; /* Auto height */
+            aspect-ratio: 1.6/1; /* Same aspect ratio as scanner frame */
+            margin: 10px auto;
+        }
+        
+        /* Make the video fit within the container while maintaining aspect ratio */
+        .camera-view {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Ensure the scanner frame stays proportional and centered */
+        .scanner-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Scanner frame with improved dimensions */
         .scanner-frame {
             position: relative;
             overflow: hidden;
-            border-radius: 16px;
+            border-radius: 12px;
             box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            width: 90%; /* Width relative to container */
+            max-width: 450px; /* Maximum width */
+            aspect-ratio: 1.6/1; /* ID card aspect ratio */
         }
         
         .scanner-frame::before {
@@ -72,66 +124,154 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            border: 2px dashed white;
-            border-radius: 18px;
+            border: 2px dashed rgba(255, 255, 255, 0.8);
+            border-radius: 14px;
             animation: pulse 1.5s infinite;
             pointer-events: none;
         }
         
+        .scanner-guide-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        
+        .guide-line {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .guide-line-h {
+            height: 1px;
+            left: 5%;
+            right: 5%;
+        }
+        
+        .guide-line-v {
+            width: 1px;
+            top: 5%;
+            bottom: 5%;
+        }
+        
+        .guide-line-h.top {
+            top: 33%;
+        }
+        
+        .guide-line-h.bottom {
+            bottom: 33%;
+        }
+        
+        .guide-line-v.left {
+            left: 33%;
+        }
+        
+        .guide-line-v.right {
+            right: 33%;
+        }
+        
         .corner {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            border-color: #ffffff;
+            width: 22px;
+            height: 22px;
+            border-color: rgba(255, 255, 255, 0.9);
             z-index: 10;
         }
         
         .corner-top-left {
-            top: 12px;
-            left: 12px;
+            top: 8px;
+            left: 8px;
             border-top: 3px solid;
             border-left: 3px solid;
             border-radius: 4px 0 0 0;
         }
         
         .corner-top-right {
-            top: 12px;
-            right: 12px;
+            top: 8px;
+            right: 8px;
             border-top: 3px solid;
             border-right: 3px solid;
             border-radius: 0 4px 0 0;
         }
         
         .corner-bottom-left {
-            bottom: 12px;
-            left: 12px;
+            bottom: 8px;
+            left: 8px;
             border-bottom: 3px solid;
             border-left: 3px solid;
             border-radius: 0 0 0 4px;
         }
         
         .corner-bottom-right {
-            bottom: 12px;
-            right: 12px;
+            bottom: 8px;
+            right: 8px;
             border-bottom: 3px solid;
             border-right: 3px solid;
             border-radius: 0 0 4px 0;
         }
         
-        .status-indicator {
+        .scan-instruction {
             position: absolute;
-            top: -8px;
+            bottom: -35px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 20;
+            width: 90%;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
         
+        /* Responsive buttons */
+        .btn-primary, .btn-secondary {
+            padding: 10px 18px;
+            font-size: 14px;
+            width: 100%;
+            max-width: 250px;
+        }
+        
+        /* Media queries for responsive design */
+        @media (min-width: 640px) {
+            .camera-container {
+                height: 60vh;
+                max-width: 500px;
+                border-radius: 12px;
+            }
+            
+            .scanner-frame {
+                width: 85%;
+            }
+            
+            .btn-primary, .btn-secondary {
+                font-size: 15px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .camera-container {
+                height: 55vh;
+                max-width: 600px;
+            }
+            
+            .scanner-frame {
+                width: 80%;
+            }
+        }
+        
+        /* Hide status indicator as requested */
+        .status-indicator {
+            display: none;
+        }
+        
+        /* Animation for scanner frame */
         @keyframes pulse {
             0% {
                 opacity: 0.6;
@@ -141,6 +281,27 @@
             }
             100% {
                 opacity: 0.6;
+            }
+        }
+        
+        /* Animation for scan line */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(0, 102, 204, 0.8), transparent);
+            animation: scan-animation 2s linear infinite;
+            z-index: 5;
+        }
+        
+        @keyframes scan-animation {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: 100%;
             }
         }
         
@@ -193,16 +354,6 @@
             overflow: hidden;
         }
         
-        .preview-card {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            width: 70vw;
-            height: 60vh;
-            margin: 10px auto;
-        }
-        
         .preview-overlay {
             position: absolute;
             bottom: 0;
@@ -234,61 +385,174 @@
             }
         }
         
-        .result-card {
-            border-radius: 12px;
-            border-left: 4px solid #0066cc;
-            background-color: white;
-            padding: 12px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+        /* Table styles */
+        .results-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         
-        .result-label {
+        .results-table th {
+            background-color: #f8fafc;
+            text-transform: uppercase;
             font-size: 12px;
-            color: #64748b;
-            font-weight: 500;
-        }
-        
-        .result-value {
-            font-size: 16px;
-            color: #1e293b;
             font-weight: 600;
+            color: #64748b;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
         }
         
-        .loading-overlay {
+        .results-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .results-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .results-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        /* Chatbot styles */
+        .chatbot-button {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.9);
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background-color: #0066cc;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 50;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
         
+        .chatbot-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .chatbot-container {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 450px;
+            border-radius: 16px;
+            background-color: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 50;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            transform-origin: bottom right;
+        }
+        
+        .chatbot-header {
+            background-color: #0066cc;
+            padding: 15px;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 5px;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            background-color: #0066cc;
+            color: white;
+            border-bottom-right-radius: 5px;
+            align-self: flex-end;
+        }
+        
+        .bot-message {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+        }
+        
+        .chatbot-input {
+            padding: 15px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .chatbot-input button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .chatbot-input button:hover {
+            background-color: #004c99;
+        }
+        
+        .hidden-scale {
+            transform: scale(0);
+            pointer-events: none;
+            opacity: 0;
+        }
+        
+        /* Loading spinner */
         .spinner {
             border: 3px solid rgba(0, 102, 204, 0.2);
             border-top: 3px solid #0066cc;
             border-radius: 50%;
-            width: 48px;
-            height: 48px;
+            width: 24px;
+            height: 24px;
             animation: spin 1s linear infinite;
-            margin-bottom: 16px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        
-        .img-preview {
-            aspect-ratio: 3/2;
-            object-fit: cover;
-            width: 100%;
-            border-radius: 8px;
         }
         
         /* Slide transitions */
@@ -304,51 +568,6 @@
         .slide-exit {
             transform: translateX(-100%);
             opacity: 0;
-        }
-        
-        /* Animations for feedback icons */
-        .feedback-icon {
-            animation: fadeInUp 0.5s ease-out forwards;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Control the camera container height */
-        .camera-container {
-            height: 60vh; /* 50% of the viewport height */
-            width: 70vw; /* 50% of the viewport height */
-            position: relative;
-            overflow: hidden;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        /* Make the video fit within the container while maintaining aspect ratio */
-        .camera-view {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Ensure the scanner frame stays proportional and centered */
-        .scanner-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
     </style>
 </head>
@@ -379,38 +598,6 @@
                     <i class="fas fa-camera mr-2"></i> Start Scanning
                 </button>
             </div>
-            
-            <!-- <div class="space-y-4">
-                <div class="flex items-start">
-                    <div class="w-10 h-10 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-primary">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="font-semibold text-neutral-darkest">Fast & Accurate</h3>
-                        <p class="text-sm text-neutral-dark">Extract license info in seconds with high accuracy</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start">
-                    <div class="w-10 h-10 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-primary">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="font-semibold text-neutral-darkest">100% Secure</h3>
-                        <p class="text-sm text-neutral-dark">Your data stays private and is never stored</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start">
-                    <div class="w-10 h-10 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-primary">
-                        <i class="fas fa-magic"></i>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="font-semibold text-neutral-darkest">Smart Detection</h3>
-                        <p class="text-sm text-neutral-dark">AI-powered image enhancement for better results</p>
-                    </div>
-                </div>
-            </div> -->
         </section>
         
         <!-- Camera Section -->
@@ -427,29 +614,40 @@
                     </div>
                 </div>
                 
-                <!-- Camera container with fixed height -->
+                <!-- Camera container with improved dimensions -->
                 <div class="camera-container bg-black">
                     <video id="video" class="camera-view" autoplay playsinline></video>
                     
                     <div class="scanner-container">
-                        <div class="relative w-11/12 mx-auto">
-                            <div id="scanner-frame" class="scanner-frame" style="aspect-ratio: 1.6/1">
-                                <div class="corner corner-top-left"></div>
-                                <div class="corner corner-top-right"></div>
-                                <div class="corner corner-bottom-left"></div>
-                                <div class="corner corner-bottom-right"></div>
-                                
-                                <div id="status-indicator" class="status-indicator bg-yellow-400 text-yellow-800">
-                                    <i class="fas fa-search mr-1"></i> Searching
-                                </div>
+                        <div id="scanner-frame" class="scanner-frame">
+                            <!-- Corner elements -->
+                            <div class="corner corner-top-left"></div>
+                            <div class="corner corner-top-right"></div>
+                            <div class="corner corner-bottom-left"></div>
+                            <div class="corner corner-bottom-right"></div>
+                            
+                            <!-- Scan animation line -->
+                            <div class="scan-line"></div>
+                            
+                            <!-- Guide lines to help position license -->
+                            <div class="scanner-guide-lines">
+                                <div class="guide-line guide-line-h top"></div>
+                                <div class="guide-line guide-line-h bottom"></div>
+                                <div class="guide-line guide-line-v left"></div>
+                                <div class="guide-line guide-line-v right"></div>
+                            </div>
+                            
+                            <!-- Scan instruction (moved from status indicator) -->
+                            <div class="scan-instruction">
+                                <i class="fas fa-id-card mr-1"></i> Position license within frame
                             </div>
                         </div>
                     </div>
                     
                     <div class="absolute bottom-5 left-0 right-0 flex justify-center">
                         <div class="px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm text-sm font-medium text-neutral-dark shadow-lg">
-                            <i class="fas fa-info-circle mr-1 text-primary"></i>
-                            Position license within the frame
+                            <i class="fas fa-id-card mr-1 text-primary"></i>
+                            Center your license in the frame
                         </div>
                     </div>
                 </div>
@@ -464,15 +662,15 @@
                         <ul class="text-neutral-darker space-y-1">
                             <li class="flex items-center">
                                 <i class="fas fa-check-circle text-primary mr-2"></i>
-                                Ensure good lighting
+                                Good lighting, avoid glare
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check-circle text-primary mr-2"></i>
-                                Keep license flat & centered & covered the full frame
+                                Keep license flat inside frame
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check-circle text-primary mr-2"></i>
-                                Avoid glare & shadows
+                                Hold camera steady
                             </li>
                         </ul>
                     </div>
@@ -481,32 +679,34 @@
         </section>
         
         <!-- Preview Section -->
-        <section id="preview-section" class="hidden slide-section slide-enter p-5 flex flex-col flex-grow">
-            <div class="flex justify-between items-center mb-4">
+        <section id="preview-section" class="hidden slide-section slide-enter p-4 flex flex-col flex-grow">
+            <div class="flex justify-between items-center mb-3">
                 <h2 class="text-xl font-bold text-neutral-darkest">Review Image</h2>
                 <button id="preview-back" class="text-neutral-dark">
                     <i class="fas fa-arrow-left mr-1"></i> Back
                 </button>
             </div>
             
-            <div class="preview-card mb-6">
-                <canvas id="canvas" class="w-full"></canvas>
-                <div class="preview-overlay">
-                    <div class="flex items-center">
-                        <i class="fas fa-id-card mr-2"></i>
-                        Driver's License
+            <div class="flex flex-col items-center justify-center flex-grow">
+                <div class="preview-card">
+                    <canvas id="canvas" class="w-full h-full"></canvas>
+                    <div class="preview-overlay">
+                        <div class="flex items-center">
+                            <i class="fas fa-id-card mr-2"></i>
+                            Driver's License
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="space-y-4">
-                <button id="extract-button" class="btn-primary flex items-center justify-center mx-auto">
-                    <i class="fas fa-magic mr-2"></i> Extract Information
-                </button>
                 
-                <button id="retake-button" class="btn-secondary flex items-center justify-center mx-auto">
-                    <i class="fas fa-redo mr-2"></i> Retake Photo
-                </button>
+                <div class="w-full max-w-md space-y-3 mt-4">
+                    <button id="extract-button" class="btn-primary flex items-center justify-center w-full mx-auto">
+                        <i class="fas fa-magic mr-2"></i> Extract Information
+                    </button>
+                    
+                    <button id="retake-button" class="btn-secondary flex items-center justify-center w-full mx-auto">
+                        <i class="fas fa-redo mr-2"></i> Retake Photo
+                    </button>
+                </div>
             </div>
         </section>
         
@@ -565,16 +765,16 @@
             </div>
         </section>
         
-        <!-- Results Section -->
-        <section id="results-section" class="hidden slide-section slide-enter p-5 flex flex-col flex-grow">
-            <div class="flex justify-between items-center mb-4">
+        <!-- Results Section with Table Format -->
+        <section id="results-section" class="hidden slide-section slide-enter p-4 flex flex-col flex-grow">
+            <div class="flex justify-between items-center mb-3">
                 <h2 class="text-xl font-bold text-neutral-darkest">License Information</h2>
                 <button id="results-back" class="text-neutral-dark">
                     <i class="fas fa-times mr-1"></i> Close
                 </button>
             </div>
             
-            <div class="bg-white rounded-lg shadow-soft p-4 mb-2">
+            <div class="bg-white rounded-lg shadow-soft p-4 mb-2 overflow-hidden">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-semibold text-neutral-darker">Extracted Data</h3>
                     <div id="accuracy-badge" class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 font-medium">
@@ -582,8 +782,19 @@
                     </div>
                 </div>
                 
-                <div id="results-container" class="space-y-3">
-                    <!-- Results will be added here -->
+                <!-- Table format for results -->
+                <div class="overflow-x-auto">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th class="w-1/3">Field</th>
+                                <th class="w-2/3">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-table-body">
+                            <!-- Results will be added here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
             
@@ -592,8 +803,8 @@
             </div>
             
             <div class="mt-auto pt-4 space-y-3">
-                <button id="copy-all" class="btn-primary flex items-center justify-center mx-auto">
-                    <i class="fas fa-copy mr-2"></i> Copy All Information
+                <button id="copy-table" class="btn-primary flex items-center justify-center mx-auto">
+                    <i class="fas fa-table mr-2"></i> Copy Table Data
                 </button>
                 
                 <button id="new-scan" class="btn-secondary flex items-center justify-center mx-auto">
@@ -715,522 +926,852 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Chatbot Button -->
+        <div id="chatbot-button" class="chatbot-button">
+            <i class="fas fa-comment-dots text-white text-2xl"></i>
+        </div>
+        
+        <!-- Chatbot Container -->
+        <div id="chatbot-container" class="chatbot-container hidden-scale">
+            <div class="chatbot-header">
+                <span>License Assistant</span>
+                <button id="close-chatbot" class="text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chatbot-messages" class="chatbot-messages">
+                <div class="message bot-message">
+                    Hi there! I'm your license assistant. How can I help you with your driver's license information?
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input-field" placeholder="Ask a question about your license...">
+                <button id="chatbot-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    // Sections
+    const welcomeSection = document.getElementById('welcome-section');
+    const cameraSection = document.getElementById('camera-section');
+    const previewSection = document.getElementById('preview-section');
+    const loadingSection = document.getElementById('loading-section');
+    const resultsSection = document.getElementById('results-section');
+    const feedbackSection = document.getElementById('feedback-section');
+    const rawSection = document.getElementById('raw-section');
+    const helpOverlay = document.getElementById('help-overlay');
+    const errorAlert = document.getElementById('error-alert');
+    const chatbotContainer = document.getElementById('chatbot-container');
     
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                // Sections
-                const welcomeSection = document.getElementById('welcome-section');
-                const cameraSection = document.getElementById('camera-section');
-                const previewSection = document.getElementById('preview-section');
-                const loadingSection = document.getElementById('loading-section');
-                const resultsSection = document.getElementById('results-section');
-                const feedbackSection = document.getElementById('feedback-section');
-                const rawSection = document.getElementById('raw-section');
-                const helpOverlay = document.getElementById('help-overlay');
-                const errorAlert = document.getElementById('error-alert');
-                
-                // Elements
-                const video = document.getElementById('video');
-                const canvas = document.getElementById('canvas');
-                const scannerFrame = document.getElementById('scanner-frame');
-                const statusIndicator = document.getElementById('status-indicator');
-                const loadingMessage = document.getElementById('loading-message');
-                const progressBar = document.getElementById('progress-bar');
-                const resultsContainer = document.getElementById('results-container');
-                const rawText = document.getElementById('raw-text');
-                const timingInfo = document.getElementById('timing-info');
-                const feedbackTitle = document.getElementById('feedback-title');
-                const feedbackMessage = document.getElementById('feedback-message');
-                const feedbackSuggestions = document.getElementById('feedback-suggestions');
-                const errorTitle = document.getElementById('error-title');
-                const errorMessageElem = document.getElementById('error-message');
-                
-                // Buttons
-                const startScanningBtn = document.getElementById('start-scanning');
-                const cameraBackBtn = document.getElementById('camera-back');
-                const cameraToggleFlashBtn = document.getElementById('camera-toggle-flash');
-                const captureButton = document.getElementById('capture-button');
-                const previewBackBtn = document.getElementById('preview-back');
-                const extractButton = document.getElementById('extract-button');
-                const retakeButton = document.getElementById('retake-button');
-                const retryCamera = document.getElementById('retry-camera');
-                const forceExtract = document.getElementById('force-extract');
-                const resultsBackBtn = document.getElementById('results-back');
-                const copyAllBtn = document.getElementById('copy-all');
-                const newScanBtn = document.getElementById('new-scan');
-                const toggleRawBtn = document.getElementById('toggle-raw');
-                const helpButton = document.getElementById('help-button');
-                const closeHelpBtn = document.getElementById('close-help');
-                const helpGotItBtn = document.getElementById('help-got-it');
-                const dismissErrorBtn = document.getElementById('dismiss-error');
-                
-                // State variables
-                let stream = null;
-                let flashEnabled = false;
-                let capturedImageData = null;
-                let extractedData = null;
-                let rawExtractedText = '';
-                let processedLicenseText = '';
-                
-                // Debug logger
-                function log(message, type = 'info') {
-                    const timestamp = new Date().toISOString();
-                    
-                    // Also log to browser console
-                    if (type === 'error') {
-                        console.error(`[${timestamp}] ${message}`);
-                    } else if (type === 'warn') {
-                        console.warn(`[${timestamp}] ${message}`);
-                    } else {
-                        console.log(`[${timestamp}] ${message}`);
-                    }
-                }
-                
-                // Show/hide sections with animation
-                function showSection(section) {
-                    // Hide all sections
-                    [welcomeSection, cameraSection, previewSection, loadingSection, 
-                     resultsSection, feedbackSection].forEach(s => {
-                        if (s !== section && !s.classList.contains('hidden')) {
-                            s.classList.add('slide-exit');
-                            setTimeout(() => {
-                                s.classList.add('hidden');
-                                s.classList.remove('slide-exit');
-                            }, 300);
-                        }
-                    });
-                    
-                    // Show target section
-                    if (section.classList.contains('hidden')) {
-                        section.classList.add('slide-enter');
-                        section.classList.remove('hidden');
-                        
-                        // Trigger reflow to ensure transition happens
-                        section.offsetHeight;
-                        
-                        setTimeout(() => {
-                            section.classList.remove('slide-enter');
-                        }, 10);
-                    }
-                }
-                
-                // Show error alert
-                function showError(title, message) {
-                    errorTitle.textContent = title;
-                    errorMessageElem.textContent = message;
-                    errorAlert.classList.remove('hidden');
-                    
-                    // Auto-hide after 5 seconds
-                    setTimeout(() => {
-                        errorAlert.classList.add('hidden');
-                    }, 5000);
-                    
-                    log(`Error: ${title} - ${message}`, 'error');
-                }
-                
-                // Helper function to stop camera
-                function stopCamera() {
-                    if (stream) {
-                        log('Stopping camera stream', 'debug');
-                        stream.getTracks().forEach(track => {
-                            track.stop();
-                        });
-                        stream = null;
-                    }
-                }
-                
-                // Initialize camera
-                async function initCamera() {
-                    try {
-                        const constraints = { 
-                            video: { 
-                                facingMode: 'environment',
-                                width: { ideal: 1280 },
-                                height: { ideal: 720 }
-                            } 
-                        };
-                        
-                        stream = await navigator.mediaDevices.getUserMedia(constraints);
-                        video.srcObject = stream;
-                        
-                        // Reset flash state
-                        flashEnabled = false;
-                        cameraToggleFlashBtn.innerHTML = '<i class="fas fa-bolt"></i>';
-                        
-                        // Show camera section
-                        showSection(cameraSection);
-                        
-                        // Set initial scanner status
-                        updateScannerStatus('searching');
-                        
-                        log('Camera initialized successfully');
-                    } catch (err) {
-                        log(`Camera initialization error: ${err.message}`, 'error');
-                        showError('Camera Error', 'Could not access the camera. Please ensure you have granted camera permissions.');
-                        showSection(welcomeSection);
-                    }
-                }
-                
-                // Capture image
-                function captureImage() {
-                    try {
-                        const context = canvas.getContext('2d');
-                        
-                        // Set canvas dimensions to match video
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        
-                        // Draw the video frame to the canvas
-                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        
-                        // Get image data as base64
-                        capturedImageData = canvas.toDataURL('image/jpeg').split(',')[1];
-                        
-                        // Stop camera
-                        stopCamera();
-                        
-                        // Show preview section
-                        showSection(previewSection);
-                        
-                        log('Image captured successfully');
-                        return true;
-                    } catch (err) {
-                        log(`Image capture error: ${err.message}`, 'error');
-                        showError('Capture Error', 'Failed to capture image. Please try again.');
-                        return false;
-                    }
-                }
-                
-                // Process image extraction
-                async function processExtraction(imageData, forceExtraction = false) {
-                    // Show loading section
-                    showSection(loadingSection);
-                    
-                    // Animate progress bar
-                    progressBar.style.width = '0%';
-                    let progress = 0;
-                    const progressInterval = setInterval(() => {
-                        if (progress < 90) {
-                            progress += Math.random() * 5;
-                            progressBar.style.width = `${progress}%`;
-                            
-                            // Update loading message
-                            if (progress < 30) {
-                                loadingMessage.textContent = 'Analyzing image...';
-                            } else if (progress < 60) {
-                                loadingMessage.textContent = 'Extracting text...';
-                            } else {
-                                loadingMessage.textContent = 'Processing license information...';
-                            }
-                        }
-                    }, 300);
-                    
-                    try {
-                        // Send to server
-                        const requestBody = {
-                            image: imageData
-                        };
-                        
-                        if (forceExtraction) {
-                            requestBody.force_extraction = true;
-                        }
-                        
-                        const response = await fetch('/extract', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(requestBody),
-                        });
-                        
-                        const result = await response.json();
-                        
-                        // Clear progress interval
-                        clearInterval(progressInterval);
-                        progressBar.style.width = '100%';
-                        
-                        if (result.status === 'error') {
-                            // Check if we received analysis feedback
-                            if (result.analysis) {
-                                handleImageFeedback(result.analysis, result.suggestions);
-                            } else {
-                                // General error
-                                throw new Error(result.message || "Unknown error occurred");
-                            }
-                        } else if (result.status === 'success') {
-                            // Store extracted data
-                            extractedData = result.data || {};
-                            rawExtractedText = result.raw_text || '';
-                            processedLicenseText = result.license_info || '';
-                            
-                            // Update raw text display
-                            rawText.textContent = rawExtractedText;
-                            
-                            // Clear previous results
-                            resultsContainer.innerHTML = '';
-                            
-                            // Add results to container
-                            for (const [key, value] of Object.entries(extractedData)) {
-                                const resultCard = document.createElement('div');
-                                resultCard.className = 'result-card';
-                                resultCard.innerHTML = `
-                                    <div class="result-label">${key}</div>
-                                    <div class="result-value">${value}</div>
-                                `;
-                                resultsContainer.appendChild(resultCard);
-                            }
-                            
-                            // Update timing info if available
-                            if (result.processing_time) {
-                                const timing = result.processing_time;
-                                timingInfo.innerHTML = `
-                                    <strong>Processing:</strong> ${timing.total_time || 'N/A'} | 
-                                    Analysis: ${timing.identification_time || 'N/A'} | 
-                                    Extraction: ${timing.extraction_time || 'N/A'}
-                                `;
-                            }
-                            
-                            // Set accuracy badge based on result count
-                            const accuracyBadge = document.getElementById('accuracy-badge');
-                            const resultCount = Object.keys(extractedData).length;
-                            
-                            if (resultCount >= 7) {
-                                accuracyBadge.innerHTML = '<i class="fas fa-check-circle mr-1"></i> High Accuracy';
-                                accuracyBadge.className = 'text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 font-medium';
-                            } else if (resultCount >= 4) {
-                                accuracyBadge.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Medium Accuracy';
-                                accuracyBadge.className = 'text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-medium';
-                            } else {
-                                accuracyBadge.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Low Accuracy';
-                                accuracyBadge.className = 'text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 font-medium';
-                            }
-                            
-                            // Show results section
-                            showSection(resultsSection);
-                        }
-                    } catch (err) {
-                        // Clear progress interval
-                        clearInterval(progressInterval);
-                        
-                        log(`Extraction error: ${err.message}`, 'error');
-                        showError('Processing Error', 'Failed to process the image. Please try again.');
-                        showSection(previewSection);
-                    }
-                }
-                
-                // Handle image feedback
-                function handleImageFeedback(analysis, suggestions) {
-                    log(`Processing image feedback: ${JSON.stringify(analysis)}`, 'debug');
-                    
-                    feedbackTitle.textContent = analysis.license_detected 
-                        ? "Image Quality Issues"
-                        : "No License Detected";
-                    
-                    feedbackMessage.textContent = analysis.license_detected 
-                        ? "We detected some issues with the license image."
-                        : "We couldn't clearly detect a driver's license in the image.";
-                    
-                    // Clear previous suggestions
-                    feedbackSuggestions.innerHTML = '';
-                    
-                    // Add suggestions
-                    const suggestionsList = suggestions || analysis.improvement_suggestions || [];
-                    suggestionsList.forEach(suggestion => {
-                        const li = document.createElement('li');
-                        li.className = 'flex items-start';
-                        li.innerHTML = `
-                            <i class="fas fa-info-circle text-yellow-600 mt-0.5 mr-2"></i>
-                            <span>${suggestion}</span>
-                        `;
-                        feedbackSuggestions.appendChild(li);
-                    });
-                    
-                    // If no suggestions were provided but there are issues
-                    if (suggestionsList.length === 0 && analysis.issues && analysis.issues.length > 0) {
-                        const defaultSuggestions = [
-                            "Make sure the license fills most of the frame",
-                            "Ensure good lighting with no glare",
-                            "Use a plain background",
-                            "Hold the camera steady"
-                        ];
-                        
-                        defaultSuggestions.forEach(suggestion => {
-                            const li = document.createElement('li');
-                            li.className = 'flex items-start';
-                            li.innerHTML = `
-                                <i class="fas fa-info-circle text-yellow-600 mt-0.5 mr-2"></i>
-                                <span>${suggestion}</span>
-                            `;
-                            feedbackSuggestions.appendChild(li);
-                        });
-                    }
-                    
-                    // Show feedback section
-                    showSection(feedbackSection);
-                }
-                
-                // Update scanner status indicator
-                function updateScannerStatus(status) {
-                    switch(status) {
-                        case 'searching':
-                            statusIndicator.className = 'status-indicator bg-yellow-400 text-yellow-800';
-                            statusIndicator.innerHTML = '<i class="fas fa-search mr-1"></i> Searching';
-                            break;
-                        case 'detected':
-                            statusIndicator.className = 'status-indicator bg-green-400 text-green-800';
-                            statusIndicator.innerHTML = '<i class="fas fa-check mr-1"></i> License Detected';
-                            break;
-                        case 'misaligned':
-                            statusIndicator.className = 'status-indicator bg-red-400 text-red-800';
-                            statusIndicator.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Align License';
-                            break;
-                        default:
-                            statusIndicator.className = 'status-indicator bg-neutral-400 text-neutral-800';
-                            statusIndicator.innerHTML = '<i class="fas fa-info-circle mr-1"></i> Ready';
-                    }
-                }
-                
-                // Event listeners
-                startScanningBtn.addEventListener('click', initCamera);
-                
-                cameraBackBtn.addEventListener('click', () => {
-                    stopCamera();
-                    showSection(welcomeSection);
-                });
-                
-                cameraToggleFlashBtn.addEventListener('click', () => {
-                    if (stream) {
-                        const track = stream.getVideoTracks()[0];
-                        
-                        // Check if torch is supported
-                        if (track.getCapabilities && track.getCapabilities().torch) {
-                            flashEnabled = !flashEnabled;
-                            track.applyConstraints({
-                                advanced: [{ torch: flashEnabled }]
-                            });
-                            
-                            // Update button icon
-                            cameraToggleFlashBtn.innerHTML = flashEnabled 
-                                ? '<i class="fas fa-bolt text-yellow-400"></i>' 
-                                : '<i class="fas fa-bolt"></i>';
-                        } else {
-                            showError('Not Supported', 'Flash/torch is not supported on this device');
-                        }
-                    }
-                });
-                
-                captureButton.addEventListener('click', captureImage);
-                
-                previewBackBtn.addEventListener('click', () => {
-                    initCamera(); // Reopen camera
-                });
-                
-                extractButton.addEventListener('click', () => {
-                    processExtraction(capturedImageData);
-                });
-                
-                retakeButton.addEventListener('click', () => {
-                    initCamera(); // Reopen camera
-                });
-                
-                retryCamera.addEventListener('click', () => {
-                    initCamera(); // Reopen camera from feedback
-                });
-                
-                forceExtract.addEventListener('click', () => {
-                    processExtraction(capturedImageData, true); // Force extraction
-                });
-                
-                resultsBackBtn.addEventListener('click', () => {
-                    showSection(welcomeSection);
-                });
-                
-                copyAllBtn.addEventListener('click', () => {
-                    // Create formatted text from results
-                    let textToCopy = '';
-                    for (const [key, value] of Object.entries(extractedData)) {
-                        textToCopy += `${key}: ${value}\n`;
-                    }
-                    
-                    navigator.clipboard.writeText(textToCopy)
-                        .then(() => {
-                            // Show brief feedback
-                            const originalText = copyAllBtn.textContent;
-                            copyAllBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Copied!';
-                            setTimeout(() => {
-                                copyAllBtn.innerHTML = '<i class="fas fa-copy mr-2"></i> Copy All Information';
-                            }, 1500);
-                        })
-                        .catch(err => {
-                            showError('Copy Failed', 'Could not copy to clipboard');
-                        });
-                });
-                
-                newScanBtn.addEventListener('click', () => {
-                    // Reset state and go to welcome
-                    rawSection.classList.add('hidden');
-                    initCamera();
-                });
-                
-                toggleRawBtn.addEventListener('click', () => {
-                    rawSection.classList.toggle('hidden');
-                    toggleRawBtn.innerHTML = rawSection.classList.contains('hidden')
-                        ? '<i class="fas fa-code mr-2"></i> Toggle Raw Data'
-                        : '<i class="fas fa-code-slash mr-2"></i> Hide Raw Data';
-                });
-                
-                helpButton.addEventListener('click', () => {
-                    helpOverlay.classList.remove('hidden');
-                });
-                
-                closeHelpBtn.addEventListener('click', () => {
-                    helpOverlay.classList.add('hidden');
-                });
-                
-                helpGotItBtn.addEventListener('click', () => {
-                    helpOverlay.classList.add('hidden');
-                });
-                
-                dismissErrorBtn.addEventListener('click', () => {
-                    errorAlert.classList.add('hidden');
-                });
-                
-                // Mock scanner status updates for demo purposes
-                if (video) {
-                    // This simulates license detection in real app
-                    // In a production app, this would be driven by actual ML model detection
-                    setTimeout(() => {
-                        // Simulating searching
-                        updateScannerStatus('searching');
-                        
-                        // Simulate detection after 3 seconds
-                        setTimeout(() => {
-                            updateScannerStatus('detected');
-                            
-                            // Simulate misalignment after another 2 seconds
-                            setTimeout(() => {
-                                updateScannerStatus('misaligned');
-                                
-                                // Back to detected after 2 more seconds
-                                setTimeout(() => {
-                                    updateScannerStatus('detected');
-                                }, 2000);
-                            }, 2000);
-                        }, 3000);
-                    }, 1000);
-                }
-                
-                // Log initial device info
-                log(`User agent: ${navigator.userAgent}`, 'debug');
-                log(`Screen: ${window.screen.width}x${window.screen.height}`, 'debug');
-                log(`Window: ${window.innerWidth}x${window.innerHeight}`, 'debug');
-                
-                // Check for camera support
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    showError('Device Not Supported', 'Your device or browser does not support camera access.');
-                    log('Camera API not supported', 'error');
-                }
+    // Elements
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const scannerFrame = document.getElementById('scanner-frame');
+    const loadingMessage = document.getElementById('loading-message');
+    const progressBar = document.getElementById('progress-bar');
+    const resultsTableBody = document.getElementById('results-table-body');
+    const rawText = document.getElementById('raw-text');
+    const timingInfo = document.getElementById('timing-info');
+    const feedbackTitle = document.getElementById('feedback-title');
+    const feedbackMessage = document.getElementById('feedback-message');
+    const feedbackSuggestions = document.getElementById('feedback-suggestions');
+    const errorTitle = document.getElementById('error-title');
+    const errorMessageElem = document.getElementById('error-message');
+    const chatbotMessages = document.getElementById('chatbot-messages');
+    const chatbotInputField = document.getElementById('chatbot-input-field');
+    
+    // Buttons
+    const startScanningBtn = document.getElementById('start-scanning');
+    const cameraBackBtn = document.getElementById('camera-back');
+    const cameraToggleFlashBtn = document.getElementById('camera-toggle-flash');
+    const captureButton = document.getElementById('capture-button');
+    const previewBackBtn = document.getElementById('preview-back');
+    const extractButton = document.getElementById('extract-button');
+    const retakeButton = document.getElementById('retake-button');
+    const retryCamera = document.getElementById('retry-camera');
+    const forceExtract = document.getElementById('force-extract');
+    const resultsBackBtn = document.getElementById('results-back');
+    const copyTableBtn = document.getElementById('copy-table');
+    const newScanBtn = document.getElementById('new-scan');
+    const toggleRawBtn = document.getElementById('toggle-raw');
+    const helpButton = document.getElementById('help-button');
+    const closeHelpBtn = document.getElementById('close-help');
+    const helpGotItBtn = document.getElementById('help-got-it');
+    const dismissErrorBtn = document.getElementById('dismiss-error');
+    const chatbotButton = document.getElementById('chatbot-button');
+    const closeChatbotBtn = document.getElementById('close-chatbot');
+    const chatbotSendBtn = document.getElementById('chatbot-send');
+    
+    // State variables
+    let stream = null;
+    let flashEnabled = false;
+    let capturedImageData = null;
+    let extractedData = null;
+    let rawExtractedText = '';
+    let processedLicenseText = '';
+    let capturedImageDimensions = { width: 0, height: 0 };
+    
+    // Scanner frame dimensions
+    let scannerBoundingBox = { relX: 0, relY: 0, relWidth: 0, relHeight: 0 };
+    
+    // Debug logger
+    function log(message, type = 'info') {
+        const timestamp = new Date().toISOString();
+        
+        // Also log to browser console
+        if (type === 'error') {
+            console.error(`[${timestamp}] ${message}`);
+        } else if (type === 'warn') {
+            console.warn(`[${timestamp}] ${message}`);
+        } else {
+            console.log(`[${timestamp}] ${message}`);
+        }
+    }
+    
+    // Show/hide sections with animation
+    function showSection(section) {
+        // Hide all sections
+        [welcomeSection, cameraSection, previewSection, loadingSection, 
+         resultsSection, feedbackSection].forEach(s => {
+            if (s !== section && !s.classList.contains('hidden')) {
+                s.classList.add('slide-exit');
+                setTimeout(() => {
+                    s.classList.add('hidden');
+                    s.classList.remove('slide-exit');
+                }, 300);
+            }
+        });
+        
+        // Show target section
+        if (section.classList.contains('hidden')) {
+            section.classList.add('slide-enter');
+            section.classList.remove('hidden');
+            
+            // Trigger reflow to ensure transition happens
+            section.offsetHeight;
+            
+            setTimeout(() => {
+                section.classList.remove('slide-enter');
+            }, 10);
+        }
+    }
+    
+    // Show error alert
+    function showError(title, message) {
+        errorTitle.textContent = title;
+        errorMessageElem.textContent = message;
+        errorAlert.classList.remove('hidden');
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            errorAlert.classList.add('hidden');
+        }, 5000);
+        
+        log(`Error: ${title} - ${message}`, 'error');
+    }
+    
+    // Helper function to stop camera
+    function stopCamera() {
+        if (stream) {
+            log('Stopping camera stream', 'debug');
+            stream.getTracks().forEach(track => {
+                track.stop();
             });
-        </script>
-    </body>
+            stream = null;
+        }
+    }
+    
+    // Initialize scanner frame dimensions
+    function initScannerFrame() {
+        if (!scannerFrame) return;
+        
+        // Get the dimensions of the scanner frame from the DOM element
+        const rect = scannerFrame.getBoundingClientRect();
+        
+        // Calculate relative position within the video
+        const videoContainer = document.querySelector('.camera-container');
+        if (!videoContainer) return;
+        
+        const videoRect = videoContainer.getBoundingClientRect();
+        
+        // Calculate relative coordinates (0-1 range)
+        const relX = (rect.left - videoRect.left) / videoRect.width;
+        const relY = (rect.top - videoRect.top) / videoRect.height;
+        const relWidth = rect.width / videoRect.width;
+        const relHeight = rect.height / videoRect.height;
+        
+        // Store relative dimensions for later use with actual video dimensions
+        scannerBoundingBox = {
+            relX: Math.max(0, relX),
+            relY: Math.max(0, relY),
+            relWidth: Math.min(1, relWidth),
+            relHeight: Math.min(1, relHeight)
+        };
+        
+        log(`Scanner frame initialized with dimensions: ${JSON.stringify(scannerBoundingBox)}`);
+    }
+    
+    // Improved camera initialization with proper dimensions
+    async function initCamera() {
+        try {
+            // Get device orientation and aspect ratio
+            const isPortrait = window.innerHeight > window.innerWidth;
+            
+            const constraints = { 
+                video: { 
+                    facingMode: 'environment',
+                    width: { ideal: isPortrait ? 720 : 1280 },
+                    height: { ideal: isPortrait ? 1280 : 720 }
+                } 
+            };
+            
+            stream = await navigator.mediaDevices.getUserMedia(constraints);
+            video.srcObject = stream;
+            
+            // Reset flash state
+            flashEnabled = false;
+            cameraToggleFlashBtn.innerHTML = '<i class="fas fa-bolt"></i>';
+            
+            // Show camera section
+            showSection(cameraSection);
+            
+            // Initialize scanner frame dimensions after camera loaded
+            video.addEventListener('loadedmetadata', () => {
+                // Short delay to ensure UI has rendered
+                setTimeout(initScannerFrame, 300);
+            });
+            
+            log('Camera initialized successfully');
+        } catch (err) {
+            log(`Camera initialization error: ${err.message}`, 'error');
+            showError('Camera Error', 'Could not access the camera. Please ensure you have granted camera permissions.');
+            showSection(welcomeSection);
+        }
+    }
+    
+    // Enhanced capture image function
+    function captureImage() {
+        try {
+            const context = canvas.getContext('2d');
+            
+            // Get the video dimensions
+            const videoWidth = video.videoWidth;
+            const videoHeight = video.videoHeight;
+            
+            // Calculate absolute dimensions of scanner area based on video size
+            const cropX = Math.floor(scannerBoundingBox.relX * videoWidth);
+            const cropY = Math.floor(scannerBoundingBox.relY * videoHeight);
+            const cropWidth = Math.floor(scannerBoundingBox.relWidth * videoWidth);
+            const cropHeight = Math.floor(scannerBoundingBox.relHeight * videoHeight);
+            
+            // Set canvas dimensions to match the cropped area
+            canvas.width = cropWidth;
+            canvas.height = cropHeight;
+            
+            // Draw only the scanner frame area to canvas
+            context.drawImage(
+                video,
+                cropX, cropY, cropWidth, cropHeight,  // Source rectangle
+                0, 0, cropWidth, cropHeight           // Destination rectangle
+            );
+            
+            // Get image data as base64
+            capturedImageData = canvas.toDataURL('image/jpeg', 0.95).split(',')[1];
+            
+            // Store cropped dimensions for reference
+            capturedImageDimensions = {
+                width: cropWidth,
+                height: cropHeight
+            };
+            
+            // Log capture info
+            log(`Captured image from scanner frame. Crop area: (${cropX},${cropY},${cropWidth},${cropHeight})`);
+            
+            // Stop camera
+            stopCamera();
+            
+            // Show preview section
+            showSection(previewSection);
+            
+            log('Image captured successfully');
+            return true;
+        } catch (err) {
+            log(`Image capture error: ${err.message}`, 'error');
+            showError('Capture Error', 'Failed to capture image. Please try again.');
+            return false;
+        }
+    }
+    
+    // Process image extraction
+    async function processExtraction(imageData, forceExtraction = false) {
+        // Show loading section
+        showSection(loadingSection);
+        
+        // Animate progress bar
+        progressBar.style.width = '0%';
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            if (progress < 90) {
+                progress += Math.random() * 5;
+                progressBar.style.width = `${progress}%`;
+                
+                // Update loading message based on progress
+                if (progress < 20) {
+                    loadingMessage.textContent = 'Enhancing image quality...';
+                } else if (progress < 40) {
+                    loadingMessage.textContent = 'Detecting license boundaries...';
+                } else if (progress < 60) {
+                    loadingMessage.textContent = 'Extracting text...';
+                } else {
+                    loadingMessage.textContent = 'Processing license information...';
+                }
+            }
+        }, 300);
+        
+        try {
+            // Prepare enhanced request with pre-processing options
+            const requestBody = {
+                image: imageData,
+                options: {
+                    enhance_quality: true,   // Request server-side image enhancement
+                    detect_boundaries: true, // Request license boundary detection
+                    auto_crop: true,         // Request automatic cropping
+                    correct_perspective: true // Request perspective correction
+                }
+            };
+            
+            if (forceExtraction) {
+                requestBody.force_extraction = true;
+            }
+            
+            const response = await fetch('/extract', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            });
+            
+            const result = await response.json();
+            
+            // Clear progress interval
+            clearInterval(progressInterval);
+            progressBar.style.width = '100%';
+            
+            if (result.status === 'error') {
+                // Check if we received analysis feedback
+                if (result.analysis) {
+                    handleImageFeedback(result.analysis, result.suggestions);
+                } else {
+                    // General error
+                    throw new Error(result.message || "Unknown error occurred");
+                }
+            } else if (result.status === 'success') {
+                // Store extracted data
+                extractedData = result.data || {};
+                rawExtractedText = result.raw_text || '';
+                processedLicenseText = result.license_info || '';
+                
+                // Update raw text display
+                rawText.textContent = rawExtractedText;
+                
+                // Clear previous results
+                resultsTableBody.innerHTML = '';
+                
+                // Add results to table
+                Object.entries(extractedData).forEach(([key, value]) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="font-medium">${key}</td>
+                        <td>${value}</td>
+                    `;
+                    resultsTableBody.appendChild(row);
+                });
+                
+                // Update timing info if available
+                if (result.processing_time) {
+                    const timing = result.processing_time;
+                    timingInfo.innerHTML = `
+                        <strong>Processing:</strong> ${timing.total_time || 'N/A'} | 
+                        Analysis: ${timing.identification_time || 'N/A'} | 
+                        Extraction: ${timing.extraction_time || 'N/A'}
+                    `;
+                }
+                
+                // Set accuracy badge based on result count
+                const accuracyBadge = document.getElementById('accuracy-badge');
+                const resultCount = Object.keys(extractedData).length;
+                
+                if (resultCount >= 7) {
+                    accuracyBadge.innerHTML = '<i class="fas fa-check-circle mr-1"></i> High Accuracy';
+                    accuracyBadge.className = 'text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 font-medium';
+                } else if (resultCount >= 4) {
+                    accuracyBadge.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Medium Accuracy';
+                    accuracyBadge.className = 'text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-medium';
+                } else {
+                    accuracyBadge.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Low Accuracy';
+                    accuracyBadge.className = 'text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 font-medium';
+                }
+                
+                // Show results section
+                showSection(resultsSection);
+            }
+        } catch (err) {
+            // Clear progress interval
+            clearInterval(progressInterval);
+            
+            log(`Extraction error: ${err.message}`, 'error');
+            showError('Processing Error', 'Failed to process the image. Please try again.');
+            showSection(previewSection);
+        }
+    }
+    
+    // Handle image feedback
+    function handleImageFeedback(analysis, suggestions) {
+        log(`Processing image feedback: ${JSON.stringify(analysis)}`, 'debug');
+        
+        feedbackTitle.textContent = analysis.license_detected 
+            ? "Image Quality Issues"
+            : "No License Detected";
+        
+        feedbackMessage.textContent = analysis.license_detected 
+            ? "We detected some issues with the license image."
+            : "We couldn't clearly detect a driver's license in the image.";
+        
+        // Clear previous suggestions
+        feedbackSuggestions.innerHTML = '';
+        
+        // Add suggestions
+        const suggestionsList = suggestions || analysis.improvement_suggestions || [];
+        suggestionsList.forEach(suggestion => {
+            const li = document.createElement('li');
+            li.className = 'flex items-start';
+            li.innerHTML = `
+                <i class="fas fa-info-circle text-yellow-600 mt-0.5 mr-2"></i>
+                <span>${suggestion}</span>
+            `;
+            feedbackSuggestions.appendChild(li);
+        });
+        
+        // If no suggestions were provided but there are issues
+        if (suggestionsList.length === 0 && analysis.issues && analysis.issues.length > 0) {
+            const defaultSuggestions = [
+                "Make sure the license fills most of the frame",
+                "Ensure good lighting with no glare",
+                "Use a plain background",
+                "Hold the camera steady"
+            ];
+            
+            defaultSuggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start';
+                li.innerHTML = `
+                    <i class="fas fa-info-circle text-yellow-600 mt-0.5 mr-2"></i>
+                    <span>${suggestion}</span>
+                `;
+                feedbackSuggestions.appendChild(li);
+            });
+        }
+        
+        // Show feedback section
+        showSection(feedbackSection);
+    }
+    
+    // Copy table data to clipboard
+    function copyTableData() {
+        if (!extractedData) {
+            showError('Copy Failed', 'No data to copy');
+            return;
+        }
+        
+        try {
+            // Create a formatted text table
+            let tableText = '';
+            
+            // Add headers
+            tableText += 'Field\tValue\n';
+            tableText += '----------------\t----------------\n';
+            
+            // Add data rows
+            Object.entries(extractedData).forEach(([key, value]) => {
+                tableText += `${key}\t${value}\n`;
+            });
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(tableText)
+                .then(() => {
+                    // Show brief feedback
+                    const originalText = copyTableBtn.textContent;
+                    copyTableBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Copied!';
+                    setTimeout(() => {
+                        copyTableBtn.innerHTML = '<i class="fas fa-table mr-2"></i> Copy Table Data';
+                    }, 1500);
+                })
+                .catch(err => {
+                    showError('Copy Failed', 'Could not copy to clipboard');
+                });
+        } catch (err) {
+            showError('Copy Failed', 'Could not copy to clipboard');
+        }
+    }
+    
+    // Chatbot functions
+    function toggleChatbot() {
+        chatbotContainer.classList.toggle('hidden-scale');
+        
+        // Focus the input field when opening
+        if (!chatbotContainer.classList.contains('hidden-scale')) {
+            setTimeout(() => {
+                chatbotInputField.focus();
+            }, 300);
+        }
+    }
+    
+    function addChatMessage(message, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        messageDiv.textContent = message;
+        
+        chatbotMessages.appendChild(messageDiv);
+        
+        // Scroll to the bottom
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+    
+    function processChatbotQuestion(question) {
+        // Clear the input field
+        chatbotInputField.value = '';
+        
+        // Add the user question to the chat
+        addChatMessage(question, true);
+        
+        // Show a loading indicator
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'message bot-message';
+        loadingDiv.innerHTML = '<div class="spinner"></div>';
+        chatbotMessages.appendChild(loadingDiv);
+        
+        // Scroll to the bottom
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        
+        // Process the question (normally this would be an API call)
+        setTimeout(() => {
+            // Remove loading indicator
+            chatbotMessages.removeChild(loadingDiv);
+            
+            // Get answer based on the extracted license data
+            const answer = getChatbotResponse(question);
+            
+            // Add the bot response
+            addChatMessage(answer);
+        }, 1000);
+    }
+    
+    function getChatbotResponse(question) {
+        // Check if we have extracted data
+        if (!extractedData || Object.keys(extractedData).length === 0) {
+            return "I don't have any license information yet. Please scan a license first, then I can help answer questions about it.";
+        }
+        
+        // Convert question to lowercase for easier matching
+        const q = question.toLowerCase();
+        
+        // Check for license number questions
+        if (q.includes('license number') || q.includes('lic#') || q.includes('id number')) {
+            const licenseNumber = extractedData['LIC#'] || extractedData['License Number'];
+            if (licenseNumber) {
+                return `The license number is ${licenseNumber}.`;
+            } else {
+                return "I couldn't find a license number in the scanned data.";
+            }
+        }
+        
+        // Check for expiration date questions
+        if (q.includes('expire') || q.includes('expiration') || q.includes('valid until')) {
+            const expirationDate = extractedData['Expiration Date'];
+            if (expirationDate) {
+                return `The license expires on ${expirationDate}.`;
+            } else {
+                return "I couldn't find an expiration date in the scanned data.";
+            }
+        }
+        
+        // Check for name questions
+        if (q.includes('name') || q.includes('whose') || q.includes('who')) {
+            const name = extractedData['Name'];
+            if (name) {
+                return `The name on the license is ${name}.`;
+            } else {
+                return "I couldn't find a name in the scanned data.";
+            }
+        }
+        
+        // Check for address questions
+        if (q.includes('address') || q.includes('live') || q.includes('location') || q.includes('residence')) {
+            const address = extractedData['Address'];
+            if (address) {
+                return `The address on the license is ${address}.`;
+            } else {
+                return "I couldn't find an address in the scanned data.";
+            }
+        }
+        
+        // Check for DOB questions
+        if (q.includes('birth') || q.includes('born') || q.includes('dob') || q.includes('age')) {
+            const dob = extractedData['DOB'];
+            if (dob) {
+                return `The date of birth is ${dob}.`;
+            } else {
+                return "I couldn't find a date of birth in the scanned data.";
+            }
+        }
+        
+        // Check for physical characteristics
+        if (q.includes('height') || q.includes('tall')) {
+            const height = extractedData['Height'];
+            if (height) {
+                return `The height listed on the license is ${height}.`;
+            } else {
+                return "I couldn't find height information in the scanned data.";
+            }
+        }
+        
+        if (q.includes('weight')) {
+            const weight = extractedData['Weight'];
+            if (weight) {
+                return `The weight listed on the license is ${weight}.`;
+            } else {
+                return "I couldn't find weight information in the scanned data.";
+            }
+        }
+        
+        if (q.includes('eye') || q.includes('eyes')) {
+            const eyes = extractedData['Eyes'];
+            if (eyes) {
+                return `The eye color listed on the license is ${eyes}.`;
+            } else {
+                return "I couldn't find eye color information in the scanned data.";
+            }
+        }
+        
+        if (q.includes('sex') || q.includes('gender')) {
+            const sex = extractedData['Sex'];
+            if (sex) {
+                return `The sex listed on the license is ${sex}.`;
+            } else {
+                return "I couldn't find sex/gender information in the scanned data.";
+            }
+        }
+        
+        // Check for restrictions
+        if (q.includes('restriction') || q.includes('restricted') || q.includes('limitation')) {
+            const restrictions = extractedData['Restrictions'];
+            if (restrictions) {
+                return `The license has the following restrictions: ${restrictions}.`;
+            } else {
+                return "I couldn't find any restriction information in the scanned data.";
+            }
+        }
+        
+        // Check for class
+        if (q.includes('class') || q.includes('type')) {
+            const licenseClass = extractedData['Class'];
+            if (licenseClass) {
+                return `This is a Class ${licenseClass} license.`;
+            } else {
+                return "I couldn't find license class information in the scanned data.";
+            }
+        }
+        
+        // Check for donor status
+        if (q.includes('donor') || q.includes('donation') || q.includes('organ')) {
+            const donor = extractedData['Donor'];
+            if (donor) {
+                return `Donor status: ${donor}.`;
+            } else {
+                return "I couldn't find donor status information in the scanned data.";
+            }
+        }
+        
+        // Check for issue date
+        if (q.includes('issue') || q.includes('issued') || q.includes('when got')) {
+            const issueDate = extractedData['Issue Date'];
+            if (issueDate) {
+                return `The license was issued on ${issueDate}.`;
+            } else {
+                return "I couldn't find the issue date in the scanned data.";
+            }
+        }
+        
+        // General questions about what was found
+        if (q.includes('what did you find') || q.includes('what information') || q.includes('what data')) {
+            const fields = Object.keys(extractedData);
+            if (fields.length > 0) {
+                return `I found the following information: ${fields.join(', ')}.`;
+            } else {
+                return "I couldn't find any information in the scanned license.";
+            }
+        }
+        
+        // Fallback response
+        return "I'm not sure about that. I can help with questions about the license information like name, expiration date, address, etc.";
+    }
+    
+    // Simulated license detection (in a real app, would use ML)
+    function simulateLicenseDetection() {
+        if (!video.srcObject) return;
+        
+        // Start mock license detection
+        const detectionInterval = setInterval(() => {
+            if (!video.srcObject) {
+                clearInterval(detectionInterval);
+                return;
+            }
+        }, 1500);
+        
+        // Store interval ID for cleanup
+        video.dataset.detectionInterval = detectionInterval;
+    }
+    
+    // Event listeners
+    startScanningBtn.addEventListener('click', initCamera);
+    
+    cameraBackBtn.addEventListener('click', () => {
+        stopCamera();
+        showSection(welcomeSection);
+    });
+    
+    cameraToggleFlashBtn.addEventListener('click', () => {
+        if (stream) {
+            const track = stream.getVideoTracks()[0];
+            
+            // Check if torch is supported
+            if (track.getCapabilities && track.getCapabilities().torch) {
+                flashEnabled = !flashEnabled;
+                track.applyConstraints({
+                    advanced: [{ torch: flashEnabled }]
+                });
+                
+                // Update button icon
+                cameraToggleFlashBtn.innerHTML = flashEnabled 
+                    ? '<i class="fas fa-bolt text-yellow-400"></i>' 
+                    : '<i class="fas fa-bolt"></i>';
+            } else {
+                showError('Not Supported', 'Flash/torch is not supported on this device');
+            }
+        }
+    });
+    
+    captureButton.addEventListener('click', captureImage);
+    
+    previewBackBtn.addEventListener('click', () => {
+        initCamera(); // Reopen camera
+    });
+    
+    extractButton.addEventListener('click', () => {
+        processExtraction(capturedImageData);
+    });
+    
+    retakeButton.addEventListener('click', () => {
+        initCamera(); // Reopen camera
+    });
+    
+    retryCamera.addEventListener('click', () => {
+        initCamera(); // Reopen camera from feedback
+    });
+    
+    forceExtract.addEventListener('click', () => {
+        processExtraction(capturedImageData, true); // Force extraction
+    });
+    
+    resultsBackBtn.addEventListener('click', () => {
+        showSection(welcomeSection);
+    });
+    
+    copyTableBtn.addEventListener('click', copyTableData);
+    
+    newScanBtn.addEventListener('click', () => {
+        // Reset state and go to welcome
+        rawSection.classList.add('hidden');
+        initCamera();
+    });
+    
+    toggleRawBtn.addEventListener('click', () => {
+        rawSection.classList.toggle('hidden');
+        toggleRawBtn.innerHTML = rawSection.classList.contains('hidden')
+            ? '<i class="fas fa-code mr-2"></i> Toggle Raw Data'
+            : '<i class="fas fa-code-slash mr-2"></i> Hide Raw Data';
+    });
+    
+    helpButton.addEventListener('click', () => {
+        helpOverlay.classList.remove('hidden');
+    });
+    
+    closeHelpBtn.addEventListener('click', () => {
+        helpOverlay.classList.add('hidden');
+    });
+    
+    helpGotItBtn.addEventListener('click', () => {
+        helpOverlay.classList.add('hidden');
+    });
+    
+    dismissErrorBtn.addEventListener('click', () => {
+        errorAlert.classList.add('hidden');
+    });
+    
+    // Chatbot event listeners
+    chatbotButton.addEventListener('click', toggleChatbot);
+    
+    closeChatbotBtn.addEventListener('click', toggleChatbot);
+    
+    chatbotSendBtn.addEventListener('click', () => {
+        const question = chatbotInputField.value.trim();
+        if (question) {
+            processChatbotQuestion(question);
+        }
+    });
+    
+    chatbotInputField.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const question = chatbotInputField.value.trim();
+            if (question) {
+                processChatbotQuestion(question);
+            }
+        }
+    });
+    
+    // Initialize scanner frame when window is resized
+    window.addEventListener('resize', initScannerFrame);
+    
+    // Window load event for scanner frame initialization
+    window.addEventListener('load', () => {
+        // Initialize scanner frame dimensions
+        initScannerFrame();
+    });
+    
+    // Cleanup detection interval when video is stopped
+    video.addEventListener('emptied', () => {
+        if (video.dataset.detectionInterval) {
+            clearInterval(parseInt(video.dataset.detectionInterval));
+            delete video.dataset.detectionInterval;
+        }
+    });
+    
+    // Start mock license detection when video starts playing
+    video.addEventListener('playing', () => {
+        simulateLicenseDetection();
+    });
+    
+    // Check for camera support
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showError('Device Not Supported', 'Your device or browser does not support camera access.');
+        log('Camera API not supported', 'error');
+    }
+});
+    </script>
+</body>
 </html>
