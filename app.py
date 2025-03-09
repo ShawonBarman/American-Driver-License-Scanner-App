@@ -65,8 +65,11 @@ def extract_text():
             logger.debug("Image data contains prefix, removing it")
             image_data = image_data.split(',')[1]
         
-        # Step 1: Extract text from image using OpenAI
-        logger.info("Sending image to OpenAI for text extraction")
+        # Force extraction flag
+        force_extraction = data.get('force_extraction', False)
+        
+        # Step 1: Use GPT-4o to detect license, crop conceptually, and extract text
+        logger.info("Sending image to OpenAI for license detection and text extraction")
         extraction_start_time = time.time()
         
         try:
@@ -75,12 +78,23 @@ def extract_text():
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are a helpful assistant that extracts text from images. Extract all visible text from the image and format it clearly."
+                        "content": """You are a specialized assistant that extracts text from driver's license images.
+                        
+                        First, identify the driver's license in the image - it will be a rectangular card with text and possibly a photo.
+                        Even if the license only takes up a small portion of the image or has a busy background, focus only on the license.
+                        
+                        Once you've located the license in the image:
+                        1. Extract all visible text from ONLY the license portion
+                        2. Ignore any text that is not on the license itself
+                        3. Format the extracted text clearly
+                        
+                        If you cannot find a driver's license in the image, respond with only: "NO_LICENSE_DETECTED"
+                        """
                     },
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": "Extract all text from this image:"},
+                            {"type": "text", "text": "Extract all text from the driver's license in this image, ignoring any background:"},
                             {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_data}"}}
                         ]
                     }
@@ -94,6 +108,25 @@ def extract_text():
             extracted_text = response.choices[0].message.content
             logger.info(f"Extracted text ({len(extracted_text)} characters)")
             logger.debug(f"Extracted text content: {extracted_text}")
+            
+            # Check if no license was detected
+            if extracted_text.strip() == "NO_LICENSE_DETECTED" and not force_extraction:
+                # Return feedback to help user take a better photo
+                suggestions = [
+                    "Make sure your driver's license is visible in the image",
+                    "Ensure good lighting with minimal glare",
+                    "Hold the license parallel to the camera",
+                    "Use a contrasting background"
+                ]
+                
+                return jsonify({
+                    "status": "error",
+                    "message": "Could not clearly detect a driver's license in the image",
+                    "analysis": {
+                        "license_detected": False
+                    },
+                    "suggestions": suggestions
+                })
             
         except Exception as e:
             logger.error(f"Error in OpenAI text extraction: {str(e)}")
@@ -120,12 +153,12 @@ def extract_text():
                         - Address
                         - Sex
                         - Height
-                        - Width
+                        - Weight
                         - Eyes
                         - Restriction
                         - DD#
                         - Donor status
-                        -Revision date
+                        - Revision date
                         
                         Format your response as key-value pairs with a colon between the key and value, one per line.
                         If you can't find information for a field, don't include it.
