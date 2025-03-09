@@ -1,2 +1,14 @@
-# American-Driver-License-Scanner-App
-A Flask-based web app that extracts text from images using OpenAI’s GPT-4o. Supports automatic recognition of driver’s license details. Deployed for free using Render.
+# 🚗 American Driver License Scanner App  
+
+## 📌 Description  
+**American Driver License Scanner App** is a **Flask-based web application** that extracts text from images of **U.S. driver's licenses** using **OpenAI's GPT-4o**.  
+It processes text and returns structured details such as **Name, DOB, License Number, Issue/Expiration Date, Address, and more**.  
+
+✅ **Features:**  
+- Extracts all visible text from driver's license images.  
+- Automatically recognizes structured details (Name, DOB, LIC#, etc.).  
+- Uses OpenAI's **GPT-4o** for accurate OCR and text processing.  
+- Simple API for integration into other applications.  
+- Free deployment on **Render** or **Railway**.  
+
+---
